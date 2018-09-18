@@ -1,0 +1,47 @@
+Python Notebook Installation:
+
+It is recommended to install Python environments using Anaconda.
+
+1) Install Anaconda:
+    Download and install from the installer suitable to your environment (Window/Mac/Linux):
+        https://www.anaconda.com/download/
+        
+    It is recommended to use Python 3.
+
+2) Create a new Python environment with Anaconda: 
+   
+   Sometimes, you will need different versions of Python, or different versions of Python packages for different projects. 
+   Python environment create an isolated environment for your project.
+   
+   The following guides you how to create a new Python environment with conda:
+   https://conda.io/docs/user-guide/tasks/manage-environments.html
+   
+3) Install Jupyter:
+   Suppose that you have created an conda environment called PY3 from the previous step, you can activate it by 
+   
+   conda activate PY3
+   
+   Install Jupyter in the activated environment:   
+
+   $(PY3) pip install jupyter
+   
+   Similarly, install other required packages:
+	numpy
+        scipy
+        scikit-learn
+        pandas
+        matplotlib.pyplot
+        pylab
+        scipy
+	seaborn
+
+  
+  
+   Run Jupyter notebook from the folder containing your notebooks *.ipynb:
+   $(PY3) jupyter notebook
+
+   You can start with the Python tutorial notebook here: https://github.com/kuleshov/cs228-material/blob/master/tutorials/python/cs228-python-tutorial.ipynb
+
+  
+
+   
