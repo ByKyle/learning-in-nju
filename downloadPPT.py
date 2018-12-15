@@ -1,10 +1,12 @@
 from urllib import parse
 
+import sys
 import requests
 import os
 import bs4
 
-username = input('moodle username: ')
+# username = input('moodle username: ')
+username = "mf1832219@smail.nju.edu.cn"
 password = input('password: ')
 
 data = {'username': username,
@@ -17,25 +19,31 @@ login_url = 'http://219.219.120.72/login/index.php'
 index_url = 'http://219.219.120.72/my/'
 
 session = requests.Session()
-session.post(login_url, data)
+session.verify = False
+session.post(login_url, data=data, headers=headers)
 
 index_response_object = session.get(index_url)
 index_soup = bs4.BeautifulSoup(index_response_object.text, features="html.parser")
 
 courses_list = index_soup.select('[class="type_course depth_3 contains_branch"]')
-courses_list_urls = list(map(lambda x: (x.a['href'], x.a['title']), courses_list))
+
+# 下载全部已选课程
+# courses_list_urls = list(map(lambda x: (x.a['href'], x.get_text()), courses_list))
+# print(courses_list_urls)
+courses_list_urls = [("http://219.219.120.72/course/view.php?id=111", "高级软件设计1班")]
 
 for course in courses_list_urls:
     home = os.path.abspath('.')
     course_path = os.path.join(home, course[1])
-    os.mkdir(course_path)
+    if not os.path.exists(course_path):
+        os.mkdir(course_path)
+
     course_soup = bs4.BeautifulSoup(session.get(course[0]).text, features='html.parser')
     doc_list = course_soup.select('[class="activity resource modtype_resource "]')
     doc_urls = list(map(lambda x: session.get(x.a['href']).url, doc_list))
-    if doc_urls.__len__() != 0:
+    if len(doc_urls) != 0:
         for doc_url in doc_urls:
-            print('downloading: ' + doc_url)
-            temp = doc_url.split('/')
-            filename = parse.unquote(temp[temp.__len__() - 1], encoding='utf8')
-            with open(os.path.join(course_path, filename).encode('utf-8'), 'wb') as fd:
+            filename = parse.unquote(doc_url.split('/')[-1], encoding='utf8')
+            print('downloading: ' + course[1] + '/' + filename)
+            with open(os.path.join(course_path, filename), 'wb') as fd:
                 fd.write(session.get(doc_url, stream=True).content)
